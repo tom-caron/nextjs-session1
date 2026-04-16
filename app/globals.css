@@ -1,15 +1,240 @@
-/* app/globals.css */
-* { box-sizing: border-box; margin: 0; padding: 0; }
 body {
- font-family: system-ui, sans-serif;
- max-width: 720px;
- margin: 0 auto;
- padding: 2rem 1rem;
- color: #000000;
+  font-family: system-ui, sans-serif;
+  background-color: #f9fafb;
+  color: #111827;
+}
+.page-container {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+h1 {
+  font-size: 1.75rem;
+  margin-bottom: 0.5rem;
+}
+h2 {
+  font-size: 1.4rem;
+  margin-bottom: 0.5rem;
+}
+p {
+  line-height: 1.6;
+  color: #374151;
+  margin-bottom: 0.75rem;
 }
 
-nav { 
-  display: flex; gap: 1.5rem; margin-bottom: 2rem;
- border-bottom: 1px solid #e5e5e5; padding-bottom: 1rem; }
-nav a { text-decoration: none; color: #555; }
-nav a:hover { color: #000; }
+/* Header sticky */
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background-color: white;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+/* Navigation */
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 1rem 2rem;
+}
+
+/* Logo */
+.nav .logo {
+  color: #6d28d9;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.nav .logo:hover {
+  text-decoration: none;
+}
+
+.logo:hover {
+  text-decoration: none;
+}
+
+/* Liens */
+.nav a {
+  text-decoration: none;
+  color: black;
+}
+
+.nav a:hover {
+  text-decoration: none;
+}
+
+.nav a:hover {
+  text-decoration: underline;
+}
+
+/* Container */
+.container {
+  max-width: 600px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+/* Carte post */
+.post-card {
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  background-color: white;
+}
+
+/* Header */
+.post-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Auteur */
+.author {
+  font-weight: bold;
+}
+
+/* Handle */
+.handle {
+  color: gray;
+  margin-left: 0.3rem;
+}
+
+/* Heure */
+.time {
+  color: gray;
+  font-size: 0.9rem;
+}
+
+/* Contenu */
+.content {
+  margin: 0.8rem 0;
+}
+
+/* Likes */
+.likes {
+  color: gray;
+  font-size: 0.9rem;
+}
+
+.user-card {
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  background-color: white;
+}
+
+.user-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.user-name {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.user-handle {
+  margin: 0.25rem 0;
+  color: gray;
+}
+
+.user-bio {
+  margin: 0.25rem 0;
+}
+
+.user-followers {
+  margin: 0.25rem 0 0;
+  color: gray;
+  font-size: 0.95rem;
+}
+
+.follow-button {
+  background-color: #6d28d9;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 0.6rem 1rem;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.profile-card {
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 1.5rem;
+  background-color: white;
+  margin-bottom: 2rem;
+}
+
+.profile-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: #6d28d9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  color: white;
+  font-weight: bold;
+  flex-shrink: 0;
+}
+
+.profile-name {
+  margin: 0;
+}
+
+.profile-handle {
+  margin: 0.25rem 0;
+  color: gray;
+}
+
+.profile-bio {
+  margin: 0.5rem 0;
+}
+
+.profile-stats {
+  display: flex;
+  gap: 1rem;
+  margin: 0.75rem 0;
+}
+
+.profile-joined {
+  margin: 0;
+  color: gray;
+  font-size: 0.95rem;
+}
+
+.team {
+  display: flex;
+  gap: 1rem;
+  margin: 1rem 0;
+}
+
+.team-card {
+  flex: 1;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 1rem;
+  background-color: white;
+}
+
+.back-link {
+  display: inline-block;
+  margin-top: 1rem;
+  color: #6d28d9;
+  text-decoration: none;
+  font-weight: bold;
+}
