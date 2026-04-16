@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
@@ -24,7 +25,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable}`}>
-      <body>{children}</body>
+      <body>
+        <nav>
+          <Link href="/">Accueil</Link>
+          <Link href="/about">À propos</Link>
+          <Link href="/counter">Compteur</Link>
+          <Link href="/contact">Contact</Link>
+        </nav>
+        <main>{children}</main>
+        </body>
     </html>
   );
 }
