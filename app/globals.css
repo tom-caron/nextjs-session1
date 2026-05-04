@@ -238,3 +238,218 @@ p {
   text-decoration: none;
   font-weight: bold;
 }
+
+.api-post-card {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.api-post-title {
+  font-weight: 500;
+  margin: 0.5rem 0;
+}
+
+.api-post-body {
+  color: #6b7280;
+  margin: 0;
+}
+
+.skeleton {
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+/* Skeleton loading */
+.skeleton-title {
+  height: 16px;
+  width: 40%;
+  background: #e5e7eb;
+  border-radius: 4px;
+  margin-bottom: 0.75rem;
+}
+
+.skeleton-line {
+  height: 12px;
+  width: 90%;
+  background: #f3f4f6;
+  border-radius: 4px;
+  margin-bottom: 0.4rem;
+}
+
+.skeleton-line.short {
+  width: 70%;
+}
+
+.error-message {
+  color: #6b7280;
+  margin-bottom: 1rem;
+}
+
+.retry-button {
+  padding: 0.5rem 1.25rem;
+  border-radius: 8px;
+  border: 1px solid #6d28d9;
+  color: #6d28d9;
+  background: transparent;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.retry-button:hover {
+  background: #f5f3ff;
+}
+
+.post-author-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.api-handle {
+  color: #6b7280;
+}
+
+.user-email,
+.user-city,
+.user-company {
+  margin: 0.25rem 0;
+  color: #6b7280;
+}
+
+.skeleton-user-name {
+  height: 16px;
+  width: 35%;
+  background: #e5e7eb;
+  border-radius: 4px;
+  margin-bottom: 0.6rem;
+}
+
+.skeleton-user-line {
+  height: 12px;
+  background: #f3f4f6;
+  border-radius: 4px;
+  margin-bottom: 0.4rem;
+}
+
+.skeleton-user-line.medium {
+  width: 45%;
+}
+
+.skeleton-user-line.long {
+  width: 70%;
+}
+
+.skeleton-user-line.short {
+  width: 30%;
+}
+
+.skeleton-button {
+  width: 90px;
+  height: 38px;
+  background: #f3f4f6;
+  border-radius: 8px;
+  flex-shrink: 0;
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 0.4;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.4;
+  }
+}
+
+.user-profile-link {
+  color: inherit;
+  text-decoration: none;
+}
+
+.user-profile-link:hover {
+  color: #6d28d9;
+}
+
+.profile-section-header {
+  background: linear-gradient(135deg, #6d28d9 0%, #4f46e5 100%);
+  padding: 1.5rem;
+  margin-bottom: 0;
+  color: white;
+  text-align: center;
+}
+
+.profile-section-header p {
+  font-size: 0.85rem;
+  opacity: 0.85;
+  margin: 0;
+}
+
+.post-detail-card {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.post-detail-card h1 {
+  margin-bottom: 1rem;
+}
+
+.post-detail-card p {
+  line-height: 1.7;
+}
+
+.comment-card {
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.comment-name {
+  font-weight: 500;
+  margin-bottom: 0.25rem;
+}
+
+.comment-email {
+  color: #6b7280;
+  font-size: 0.85rem;
+  margin-bottom: 0.5rem;
+}
+
+.comment-body {
+  color: #374151;
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.skeleton-post-title {
+  height: 32px;
+  width: 60%;
+  background: #e5e7eb;
+  border-radius: 6px;
+  margin-bottom: 1.5rem;
+}
+
+.skeleton-post-line {
+  height: 14px;
+  background: #f3f4f6;
+  border-radius: 4px;
+  margin-bottom: 0.5rem;
+}
+
+.post-link {
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.post-link:hover .api-post-title {
+  text-decoration: underline;
+}

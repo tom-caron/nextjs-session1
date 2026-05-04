@@ -1,57 +1,74 @@
-import PostCard from "@/components/PostCard";
+import Link from "next/link";
 
 type Post = {
   id: number;
-  author: string;
-  handle: string;
-  content: string;
-  likes: number;
-  time: string;
+  userId: number;
+  title: string;
+  body: string;
 };
 
-const posts: Post[] = [
-  {
-    id: 1,
-    author: "Alice Martin",
-    handle: "@alice_dev",
-    content: "Je viens de déployer mon premier projet Next.js 🚀",
-    likes: 24,
-    time: "Il y a 2h",
-  },
-  {
-    id: 2,
-    author: "Bob Nguyen",
-    handle: "@bob_codes",
-    content:
-      "Les Server Components changent vraiment la façon de penser le rendu !",
-    likes: 18,
-    time: "Il y a 4h",
-  },
-  {
-    id: 3,
-    author: "Clara Dubois",
-    handle: "@clara_ui",
-    content:
-      "Tailwind ou CSS classique avec Next.js ? Curieuse des pratiques de votre équipe !",
-    likes: 41,
-    time: "Il y a 6h",
-  },
-];
+type User = {
+  id: number;
+  name: string;
+  username: string;
+};
 
-export default function Home() {
+type EnrichedPost = Post & {
+  author: string;
+  handle: string;
+};
+
+async function getPostsWithUsers(): Promise<EnrichedPost[]> {
+  const [postsRes, usersRes] = await Promise.all([
+    fetch(
+      "https://jsonplaceholder.typicode.com/posts?_limit=10",
+      //"https://jsonplaceholder.typicode.com/posts-invalide",
+      {
+        next: { revalidate: 60 },
+      },
+    ),
+    fetch("https://jsonplaceholder.typicode.com/users", {
+      next: { revalidate: 300 },
+    }),
+  ]);
+
+  if (!postsRes.ok || !usersRes.ok) {
+    throw new Error("Erreur lors du chargement des données");
+  }
+
+  const [posts, users]: [Post[], User[]] = await Promise.all([
+    postsRes.json(),
+    usersRes.json(),
+  ]);
+
+  const usersById = Object.fromEntries(users.map((user) => [user.id, user]));
+
+  return posts.map((post) => ({
+    ...post,
+    author: usersById[post.userId]?.name ?? "Inconnu",
+    handle: "@" + (usersById[post.userId]?.username ?? "inconnu"),
+  }));
+}
+
+export default async function HomePage() {
+  const posts = await getPostsWithUsers();
+
   return (
     <div className="container">
       <h1>Fil d’actualité</h1>
 
       {posts.map((post) => (
-        <PostCard
-          key={post.id}
-          author={post.author}
-          handle={post.handle}
-          content={post.content}
-          likes={post.likes}
-          time={post.time}
-        />
+        <article key={post.id} className="api-post-card">
+          <div className="post-author-row">
+            <strong>{post.author}</strong>
+            <span className="api-handle">{post.handle}</span>
+          </div>
+
+          <Link href={`/posts/${post.id}`} className="post-link">
+            <p className="api-post-title">{post.title}</p>
+          </Link>
+          <p className="api-post-body">{post.body}</p>
+        </article>
       ))}
     </div>
   );
