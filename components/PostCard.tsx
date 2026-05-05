@@ -1,6 +1,8 @@
-import LikeButton from "@/components/LikeButton";
+import DeletePostButton from "./DeletePostButton";
+import LikeButton from "./LikeButton";
 
 type PostCardProps = {
+  id: number;
   author: string;
   handle: string;
   content: string;
@@ -9,6 +11,7 @@ type PostCardProps = {
 };
 
 export default function PostCard({
+  id,
   author,
   handle,
   content,
@@ -22,11 +25,16 @@ export default function PostCard({
           <span className="author">{author}</span>{" "}
           <span className="handle">{handle}</span>
         </div>
+
         <span className="time">{time}</span>
       </div>
 
       <p className="content">{content}</p>
-      <LikeButton initialLikes={likes} />
+
+      <div className="post-actions">
+        <LikeButton initialLikes={likes} />
+        <DeletePostButton postId={id} />
+      </div>
     </div>
   );
 }

@@ -1,3 +1,9 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
 body {
   font-family: system-ui, sans-serif;
   background-color: #f9fafb;
@@ -452,4 +458,120 @@ p {
 
 .post-link:hover .api-post-title {
   text-decoration: underline;
+}
+
+.new-post-form {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.new-post-textarea {
+  width: 100%;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 0.75rem;
+  resize: vertical;
+  font-family: inherit;
+  margin-bottom: 0.75rem;
+}
+
+.form-error {
+  color: #dc2626;
+  font-size: 0.85rem;
+  margin-bottom: 0.5rem;
+}
+
+.new-post-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.char-count {
+  font-size: 0.85rem;
+  color: #9ca3af;
+}
+
+.publish-button {
+  padding: 0.5rem 1.25rem;
+  border-radius: 8px;
+  background: #6d28d9;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.publish-button:disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
+}
+
+.search-wrapper {
+  position: relative;
+  margin-left: auto;
+}
+
+.search-input {
+  border: 1px solid #e5e7eb;
+  border-radius: 999px;
+  padding: 0.5rem 0.9rem;
+  font-family: inherit;
+}
+
+.search-results {
+  position: absolute;
+  right: 0;
+  top: 120%;
+  width: 300px;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 0.75rem;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  z-index: 200;
+}
+
+.search-results p {
+  margin: 0;
+  color: #6b7280;
+  font-size: 0.9rem;
+}
+
+.search-result-item {
+  padding: 0.6rem 0;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.search-result-item:last-child {
+  border-bottom: none;
+}
+
+.search-result-item strong {
+  font-size: 0.9rem;
+}
+
+.search-result-item p {
+  margin-top: 0.25rem;
+}
+
+.post-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.delete-button {
+  border: 1px solid #e5e7eb;
+  background: white;
+  border-radius: 8px;
+  padding: 0.4rem 0.7rem;
+  cursor: pointer;
+}
+
+.delete-button:hover {
+  background: #fee2e2;
+  border-color: #dc2626;
 }

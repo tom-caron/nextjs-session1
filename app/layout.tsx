@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Geist, Geist_Mono } from "next/font/google";
+import SearchBar from "@/components/SearchBar";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -36,6 +37,7 @@ export default function RootLayout({
             <Link href="/explorer">Explorer</Link>
             <Link href="/profile">Mon profil</Link>
             <Link href="/about">À propos</Link>
+            <SearchBar />
           </nav>
         </header>
         <main>{children}</main>
