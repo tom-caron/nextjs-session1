@@ -1,11 +1,19 @@
 export const dynamic = "force-dynamic";
 
-import { getAllPosts } from "@/lib/store";
+import { prisma } from "@/lib/prisma";
 import PostCard from "@/components/PostCard";
 import NewPostForm from "@/components/NewPostForm";
 
 export default async function HomePage() {
-  const posts = getAllPosts();
+  const posts = await prisma.post.findMany({
+    orderBy: {
+      createdAt: "desc",
+    },
+    include: {
+      author: true,
+    },
+    take: 20,
+  });
 
   return (
     <div className="container">
@@ -17,11 +25,11 @@ export default async function HomePage() {
         <PostCard
           key={post.id}
           id={post.id}
-          author={post.author}
-          handle={post.handle}
+          author={post.author.name}
+          handle={post.author.handle}
           content={post.content}
           likes={post.likes}
-          time={new Date(post.createdAt).toLocaleDateString("fr-FR")}
+          time={post.createdAt.toLocaleDateString("fr-FR")}
         />
       ))}
     </div>

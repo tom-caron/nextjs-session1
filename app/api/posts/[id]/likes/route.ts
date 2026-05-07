@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getPostById, toggleLike } from "@/lib/store";
+import { prisma } from "@/lib/prisma";
 
 type Params = {
   params: Promise<{ id: string }>;
@@ -8,22 +8,13 @@ type Params = {
 export async function POST(request: Request, { params }: Params) {
   const { id } = await params;
 
-  const post = getPostById(Number(id));
-
-  if (!post) {
-    return NextResponse.json(
-      { error: "Post introuvable" },
-      { status: 404 }
-    );
-  }
-
   let body;
 
   try {
     body = await request.json();
   } catch {
     return NextResponse.json(
-      { error: "Corps JSON invalide" },
+      { error: "JSON invalide" },
       { status: 400 }
     );
   }
@@ -37,7 +28,25 @@ export async function POST(request: Request, { params }: Params) {
     );
   }
 
-  const updated = toggleLike(Number(id), increment);
+  try {
+    const post = await prisma.post.update({
+      where: {
+        id: Number(id),
+      },
+      data: {
+        likes: {
+          [increment ? "increment" : "decrement"]: 1,
+        },
+      },
+    });
 
-  return NextResponse.json({ likes: updated?.likes });
+    return NextResponse.json({
+      likes: post.likes,
+    });
+  } catch {
+    return NextResponse.json(
+      { error: "Post introuvable" },
+      { status: 404 }
+    );
+  }
 }

@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { deletePost, getPostById, updatePost } from "@/lib/store";
+import { prisma } from "@/lib/prisma";
 
 type Params = {
   params: Promise<{ id: string }>;
@@ -8,7 +8,14 @@ type Params = {
 export async function GET(_: Request, { params }: Params) {
   const { id } = await params;
 
-  const post = getPostById(Number(id));
+  const post = await prisma.post.findUnique({
+    where: {
+      id: Number(id),
+    },
+    include: {
+      author: true,
+    },
+  });
 
   if (!post) {
     return NextResponse.json({ error: "Post introuvable" }, { status: 404 });
@@ -20,26 +27,50 @@ export async function GET(_: Request, { params }: Params) {
 export async function PATCH(request: Request, { params }: Params) {
   const { id } = await params;
 
-  const post = getPostById(Number(id));
+  const { content } = await request.json();
 
-  if (!post) {
-    return NextResponse.json({ error: "Post introuvable" }, { status: 404 });
+  if (!content) {
+    return NextResponse.json({ error: "content requis" }, { status: 400 });
   }
 
-  const body = await request.json();
-  const updated = updatePost(Number(id), body);
+  if (content.length > 280) {
+    return NextResponse.json(
+      { error: "Le contenu ne peut pas dépasser 280 caractères" },
+      { status: 400 },
+    );
+  }
 
-  return NextResponse.json(updated);
+  try {
+    const post = await prisma.post.update({
+      where: {
+        id: Number(id),
+      },
+      data: {
+        content,
+      },
+      include: {
+        author: true,
+      },
+    });
+
+    return NextResponse.json(post);
+  } catch {
+    return NextResponse.json({ error: "Post introuvable" }, { status: 404 });
+  }
 }
 
 export async function DELETE(_: Request, { params }: Params) {
   const { id } = await params;
 
-  const deleted = deletePost(Number(id));
+  try {
+    await prisma.post.delete({
+      where: {
+        id: Number(id),
+      },
+    });
 
-  if (!deleted) {
+    return new Response(null, { status: 204 });
+  } catch {
     return NextResponse.json({ error: "Post introuvable" }, { status: 404 });
   }
-
-  return new Response(null, { status: 204 });
 }
