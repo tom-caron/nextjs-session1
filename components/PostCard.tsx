@@ -3,6 +3,8 @@ import LikeButton from "./LikeButton";
 
 type PostCardProps = {
   id: number;
+  authorId?: string;
+  currentUserId?: string;
   author: string;
   handle: string;
   content: string;
@@ -12,12 +14,16 @@ type PostCardProps = {
 
 export default function PostCard({
   id,
+  authorId,
+  currentUserId,
   author,
   handle,
   content,
   likes,
   time,
 }: PostCardProps) {
+  const canDelete = authorId && currentUserId && authorId === currentUserId;
+
   return (
     <div className="post-card">
       <div className="post-header">
@@ -32,8 +38,9 @@ export default function PostCard({
       <p className="content">{content}</p>
 
       <div className="post-actions">
-        <LikeButton initialLikes={likes} />
-        <DeletePostButton postId={id} />
+        <LikeButton postId={id} initialLikes={likes} />
+
+        {canDelete && <DeletePostButton postId={id} />}
       </div>
     </div>
   );

@@ -1,53 +1,46 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useSession, signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
-type User = {
-  id: string;
-  name: string;
-  handle: string;
-  email: string;
-};
-
 export default function NewPostForm() {
+  const { data: session, status } = useSession();
   const [content, setContent] = useState("");
-  const [authorId, setAuthorId] = useState<string | null>(null);
-  const [loadingUser, setLoadingUser] = useState(true);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const router = useRouter();
 
-  useEffect(() => {
-    async function fetchFirstUser() {
-      try {
-        const res = await fetch("/api/users");
-        const data = await res.json();
+  if (status === "loading") {
+    return (
+      <div className="new-post-form">
+        <p className="char-count">Chargement de la session...</p>
+      </div>
+    );
+  }
 
-        if (!res.ok) {
-          throw new Error(
-            data.error ?? "Impossible de charger les utilisateurs",
-          );
-        }
-
-        setAuthorId(data.users[0]?.id ?? null);
-      } catch (err) {
-        setError(
-          err instanceof Error ? err.message : "Erreur lors du chargement",
-        );
-      } finally {
-        setLoadingUser(false);
-      }
-    }
-
-    fetchFirstUser();
-  }, []);
+  if (!session) {
+    return (
+      <div className="new-post-form not-connected-box">
+        <p>
+          <button
+            type="button"
+            onClick={() => signIn("github")}
+            className="login-link-button"
+          >
+            Connectez-vous
+          </button>{" "}
+          pour publier un post
+        </p>
+      </div>
+    );
+  }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
 
-    if (!content.trim() || !authorId) return;
+    if (!content.trim() || !session?.user.id) return;
 
     setLoading(true);
     setError(null);
@@ -60,14 +53,19 @@ export default function NewPostForm() {
         },
         body: JSON.stringify({
           content,
-          authorId,
         }),
       });
 
-      const data = await res.json();
+      let data = null;
+
+      try {
+        data = await res.json();
+      } catch {
+        data = null;
+      }
 
       if (!res.ok) {
-        throw new Error(data.error ?? "Erreur lors de la création");
+        throw new Error(data?.error ?? "Erreur lors de la création");
       }
 
       setContent("");
@@ -81,6 +79,10 @@ export default function NewPostForm() {
 
   return (
     <form onSubmit={handleSubmit} className="new-post-form">
+      <p className="posting-as">
+        Publier en tant que <strong>{session.user.name}</strong>
+      </p>
+
       <textarea
         value={content}
         onChange={(e) => setContent(e.target.value)}
@@ -97,14 +99,10 @@ export default function NewPostForm() {
 
         <button
           type="submit"
-          disabled={loading || loadingUser || !content.trim() || !authorId}
+          disabled={loading || !content.trim()}
           className="publish-button"
         >
-          {loading
-            ? "Publication..."
-            : loadingUser
-              ? "Chargement..."
-              : "Publier"}
+          {loading ? "Publication..." : "Publier"}
         </button>
       </div>
     </form>

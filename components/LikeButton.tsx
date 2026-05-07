@@ -3,33 +3,55 @@
 import { useState } from "react";
 
 type LikeButtonProps = {
+  postId: number;
   initialLikes: number;
 };
 
-export default function LikeButton({ initialLikes }: LikeButtonProps) {
+export default function LikeButton({ postId, initialLikes }: LikeButtonProps) {
   const [liked, setLiked] = useState(false);
   const [count, setCount] = useState(initialLikes);
+  const [loading, setLoading] = useState(false);
 
-  const handleClick = () => {
-    setLiked(!liked);
-    setCount(liked ? count - 1 : count + 1);
-  };
+  async function handleClick() {
+    if (loading) return;
+
+    const nextLiked = !liked;
+
+    setLiked(nextLiked);
+    setCount((prev) => prev + (nextLiked ? 1 : -1));
+    setLoading(true);
+
+    try {
+      const res = await fetch(`/api/posts/${postId}/likes`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          increment: nextLiked,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.error ?? "Erreur lors du like");
+      }
+
+      setCount(data.likes);
+    } catch {
+      setLiked(!nextLiked);
+      setCount((prev) => prev + (nextLiked ? -1 : 1));
+    } finally {
+      setLoading(false);
+    }
+  }
 
   return (
     <button
       onClick={handleClick}
-      style={{
-        border: "1px solid",
-        borderColor: liked ? "#ec4899" : "#e5e7eb",
-        background: liked ? "#fce7f3" : "transparent",
-        color: liked ? "#ec4899" : "#6b7280",
-        borderRadius: "8px",
-        padding: "0.4rem 0.8rem",
-        cursor: "pointer",
-        display: "flex",
-        alignItems: "center",
-        gap: "0.4rem",
-      }}
+      className={`like-button ${liked ? "liked" : ""}`}
+      disabled={loading}
     >
       {liked ? "❤️" : "🤍"} {count}
     </button>

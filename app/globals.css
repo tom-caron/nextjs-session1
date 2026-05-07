@@ -575,3 +575,89 @@ p {
   background: #fee2e2;
   border-color: #dc2626;
 }
+
+.auth-loading {
+  color: #9ca3af;
+  font-size: 0.85rem;
+}
+
+.auth-login-button {
+  padding: 0.4rem 1rem;
+  border-radius: 8px;
+  background: #24292f;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 0.875rem;
+}
+
+.auth-user {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.auth-avatar {
+  border-radius: 50%;
+}
+
+.auth-name {
+  font-size: 0.875rem;
+}
+
+.auth-logout-button {
+  font-size: 0.8rem;
+  color: #6b7280;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.not-connected-box {
+  text-align: center;
+  background: #f9fafb;
+}
+
+.login-link-button {
+  color: #6d28d9;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 600;
+}
+
+.posting-as {
+  font-size: 0.85rem;
+  margin-bottom: 0.5rem;
+  color: #374151;
+}
+
+.profile-avatar-img {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+}
+
+.like-button {
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 0.4rem 0.8rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: transparent;
+  color: #6b7280;
+}
+
+.like-button.liked {
+  border-color: #ec4899;
+  background: #fce7f3;
+  color: #ec4899;
+}
+
+.like-button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}

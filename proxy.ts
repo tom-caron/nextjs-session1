@@ -1,22 +1,21 @@
+import { auth } from "@/auth";
 import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
 
-export function proxy(request: NextRequest) {
-  const { pathname } = request.nextUrl;
-  const method = request.method;
+export default auth(function proxy(req) {
+  const { pathname } = req.nextUrl;
+  const session = req.auth;
 
   if (pathname.startsWith("/api")) {
-    const timestamp = new Date()
-      .toISOString()
-      .split("T")[1]
-      .slice(0, 8);
+    const ts = new Date().toISOString().slice(11, 19);
 
-    console.log(`[${timestamp}] ${method.padEnd(6)} ${pathname}`);
+    console.log(
+      `[${ts}] ${req.method.padEnd(6)} ${pathname} ${session ? "✓" : "○"}`,
+    );
   }
 
   return NextResponse.next();
-}
+});
 
 export const config = {
-  matcher: ["/api/:path*"],
+  matcher: ["/api/:path*", "/profile/:path*"],
 };

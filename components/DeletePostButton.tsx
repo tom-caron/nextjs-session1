@@ -10,6 +10,12 @@ export default function DeletePostButton({ postId }: DeletePostButtonProps) {
   const router = useRouter();
 
   async function handleDelete() {
+    const confirmDelete = window.confirm(
+      "Voulez-vous vraiment supprimer ce post ?",
+    );
+
+    if (!confirmDelete) return;
+
     const res = await fetch(`/api/posts/${postId}`, {
       method: "DELETE",
     });

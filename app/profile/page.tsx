@@ -1,73 +1,58 @@
-import type { Metadata } from "next";
-import PostCard from "@/components/PostCard";
+import { auth } from "@/auth";
+import { prisma } from "@/lib/prisma";
+import { redirect } from "next/navigation";
 
-export const metadata: Metadata = {
-  title: "Mon profil · LinkUp",
-};
+export default async function ProfilePage() {
+  const session = await auth();
 
-const currentUser = {
-  name: "Alice Martin",
-  handle: "@alice_dev",
-  bio: "Développeuse full-stack · Next.js addict · Coffee ☕",
-  followers: 312,
-  following: 148,
-  joinedDate: "Septembre 2024",
-};
+  if (!session) {
+    redirect("/api/auth/signin");
+  }
 
-const myPosts = [
-  {
-    id: 1,
-    content: "Je viens de déployer mon premier projet Next.js 🚀",
-    likes: 24,
-    time: "Il y a 2h",
-  },
-  {
-    id: 2,
-    content:
-      "Les hooks React sont vraiment puissants quand on les maîtrise 💡",
-    likes: 15,
-    time: "Hier",
-  },
-];
+  const user = await prisma.user.findUnique({
+    where: {
+      id: session.user.id,
+    },
+    include: {
+      posts: {
+        orderBy: {
+          createdAt: "desc",
+        },
+      },
+    },
+  });
 
-export default function ProfilePage() {
+  if (!user) {
+    redirect("/");
+  }
+
   return (
     <div className="container">
       <div className="profile-card">
         <div className="profile-header">
-          <div className="avatar">A</div>
+          {user.image ? (
+            <img src={user.image} alt="Avatar" className="profile-avatar-img" />
+          ) : (
+            <div className="avatar">👤</div>
+          )}
 
           <div>
-            <h1 className="profile-name">{currentUser.name}</h1>
-            <p className="profile-handle">{currentUser.handle}</p>
-            <p className="profile-bio">{currentUser.bio}</p>
-            <p className="profile-posts">{myPosts.length} posts</p>
+            <h1 className="profile-name">{user.name}</h1>
 
-            <div className="profile-stats">
-              <span>
-                <strong>{currentUser.followers}</strong> abonnés
-              </span>
-              <span>
-                <strong>{currentUser.following}</strong> abonnements
-              </span>
-            </div>
+            {user.handle && <p className="profile-handle">{user.handle}</p>}
 
-            <p className="profile-joined">Inscrite en {currentUser.joinedDate}</p>
+            {user.email && <p className="profile-bio">{user.email}</p>}
           </div>
         </div>
       </div>
 
-      <h2>Mes posts</h2>
+      <h2>Mes posts ({user.posts.length})</h2>
 
-      {myPosts.map((post) => (
-        <PostCard
-          key={post.id}
-          author={currentUser.name}
-          handle={currentUser.handle}
-          content={post.content}
-          likes={post.likes}
-          time={post.time}
-        />
+      {user.posts.map((post) => (
+        <div key={post.id} className="api-post-card">
+          <p className="api-post-body">{post.content}</p>
+          <small className="likes">❤️ {post.likes}</small>
+        </div>
       ))}
     </div>
   );

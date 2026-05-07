@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { auth } from "@/auth";
 
 type Params = {
   params: Promise<{ id: string }>;
@@ -62,15 +63,34 @@ export async function PATCH(request: Request, { params }: Params) {
 export async function DELETE(_: Request, { params }: Params) {
   const { id } = await params;
 
-  try {
-    await prisma.post.delete({
-      where: {
-        id: Number(id),
-      },
-    });
+  const session = await auth();
 
-    return new Response(null, { status: 204 });
-  } catch {
+  if (!session) {
+    return NextResponse.json({ error: "Non authentifié" }, { status: 401 });
+  }
+
+  const post = await prisma.post.findUnique({
+    where: {
+      id: Number(id),
+    },
+  });
+
+  if (!post) {
     return NextResponse.json({ error: "Post introuvable" }, { status: 404 });
   }
+
+  if (post.authorId !== session.user.id) {
+    return NextResponse.json(
+      { error: "Interdit — vous n'êtes pas l'auteur de ce post" },
+      { status: 403 },
+    );
+  }
+
+  await prisma.post.delete({
+    where: {
+      id: Number(id),
+    },
+  });
+
+  return new Response(null, { status: 204 });
 }
