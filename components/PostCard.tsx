@@ -1,3 +1,4 @@
+import Link from "next/link";
 import DeletePostButton from "./DeletePostButton";
 import LikeButton from "./LikeButton";
 
@@ -35,7 +36,9 @@ export default function PostCard({
         <span className="time">{time}</span>
       </div>
 
-      <p className="content">{content}</p>
+      <Link href={`/posts/${id}`} className="post-link">
+        <p className="content">{content}</p>
+      </Link>
 
       <div className="post-actions">
         <LikeButton postId={id} initialLikes={likes} />

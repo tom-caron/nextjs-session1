@@ -10,6 +10,12 @@ export default function Loading() {
           style={{ width: `${100 - i * 10}%` }}
         />
       ))}
+
+      <div className="comment-form">
+        <div className="skeleton skeleton-title" />
+        <div className="skeleton skeleton-line" />
+        <div className="skeleton skeleton-line short" />
+      </div>
     </div>
   );
 }

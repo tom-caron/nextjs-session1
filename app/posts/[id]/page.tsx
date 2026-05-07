@@ -1,74 +1,57 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}): Promise<Metadata> {
-  const { id } = await params;
-
-  const res = await fetch(`https://jsonplaceholder.typicode.com/posts/${id}`);
-
-  if (!res.ok) {
-    return { title: "Post introuvable · LinkUp" };
-  }
-
-  const post = await res.json();
-
-  const truncatedTitle =
-    post.title.length > 60 ? post.title.slice(0, 60) + "..." : post.title;
-
-  return {
-    title: `${truncatedTitle} · LinkUp`,
-    description: post.body,
-  };
-}
-
-type Post = {
-  id: number;
-  title: string;
-  body: string;
-  userId: number;
-};
-
-type Comment = {
-  id: number;
-  name: string;
-  email: string;
-  body: string;
-};
+import { prisma } from "@/lib/prisma";
+import CommentForm from "@/components/CommentForm";
 
 type Props = {
   params: Promise<{ id: string }>;
 };
 
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { id } = await params;
+
+  const post = await prisma.post.findUnique({
+    where: {
+      id: Number(id),
+    },
+  });
+
+  if (!post) {
+    return {
+      title: "Post introuvable · LinkUp",
+    };
+  }
+
+  const title =
+    post.content.length > 60 ? post.content.slice(0, 60) + "..." : post.content;
+
+  return {
+    title: `${title} · LinkUp`,
+    description: post.content,
+  };
+}
+
 export default async function PostPage({ params }: Props) {
   const { id } = await params;
 
-  const [postRes, commentsRes] = await Promise.all([
-    fetch(`https://jsonplaceholder.typicode.com/posts/${id}`, {
-      next: { revalidate: 60 },
-    }),
-    fetch(`https://jsonplaceholder.typicode.com/posts/${id}/comments`, {
-      next: { revalidate: 60 },
-    }),
-  ]);
+  const post = await prisma.post.findUnique({
+    where: {
+      id: Number(id),
+    },
+    include: {
+      author: true,
+      comments: {
+        orderBy: {
+          createdAt: "desc",
+        },
+        include: {
+          author: true,
+        },
+      },
+    },
+  });
 
-  if (!postRes.ok) {
-    throw new Error("Post introuvable");
-  }
-
-  if (!commentsRes.ok) {
-    throw new Error("Impossible de charger les commentaires");
-  }
-
-  const [post, comments]: [Post, Comment[]] = await Promise.all([
-    postRes.json(),
-    commentsRes.json(),
-  ]);
-
-  if (!post.id) {
+  if (!post) {
     throw new Error("Post introuvable");
   }
 
@@ -77,20 +60,41 @@ export default async function PostPage({ params }: Props) {
       <Link href="/" className="back-link">
         ← Retour au fil
       </Link>
+
       <article className="post-detail-card">
-        <h1>{post.title}</h1>
-        <p>{post.body}</p>
+        <div className="post-author-row">
+          <strong>{post.author.name ?? "Utilisateur"}</strong>
+          <span className="api-handle">{post.author.handle ?? "@unknown"}</span>
+        </div>
+
+        <p className="post-detail-content">{post.content}</p>
+
+        <p className="post-detail-meta">
+          ❤️ {post.likes} · Publié le{" "}
+          {post.createdAt.toLocaleDateString("fr-FR")}
+        </p>
       </article>
 
-      <h2>Commentaires ({comments.length})</h2>
+      <CommentForm postId={post.id} />
 
-      {comments.map((comment) => (
-        <div key={comment.id} className="comment-card">
-          <p className="comment-name">{comment.name}</p>
-          <p className="comment-email">{comment.email}</p>
-          <p className="comment-body">{comment.body}</p>
-        </div>
-      ))}
+      <h2>Commentaires ({post.comments.length})</h2>
+
+      {post.comments.length === 0 ? (
+        <p className="empty-comments">Aucun commentaire pour le moment.</p>
+      ) : (
+        post.comments.map((comment) => (
+          <div key={comment.id} className="comment-card">
+            <p className="comment-name">
+              {comment.author.name ?? "Utilisateur"}
+            </p>
+            <p className="comment-email">
+              {comment.author.handle ?? comment.author.email ?? "@unknown"} ·{" "}
+              {comment.createdAt.toLocaleDateString("fr-FR")}
+            </p>
+            <p className="comment-body">{comment.content}</p>
+          </div>
+        ))
+      )}
     </div>
   );
 }

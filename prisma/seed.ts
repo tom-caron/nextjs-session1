@@ -1,15 +1,15 @@
 import "dotenv/config";
 import { PrismaClient } from "@prisma/client";
-import { PrismaBetterSqlite3 } from "@prisma/adapter-better-sqlite3";
+import { PrismaPg } from "@prisma/adapter-pg";
 
-const adapter = new PrismaBetterSqlite3({
-  url: process.env.DATABASE_URL!,
+const adapter = new PrismaPg({
+  connectionString: process.env.DATABASE_URL!,
 });
 
 const prisma = new PrismaClient({ adapter });
 
 async function main() {
-  // ⚠️ ordre important
+  await prisma.comment.deleteMany();
   await prisma.post.deleteMany();
   await prisma.user.deleteMany();
 
@@ -59,8 +59,7 @@ async function main() {
         authorId: clara.id,
       },
       {
-        content:
-          "Prisma + Next.js = combo parfait pour une API type-safe 💎",
+        content: "Prisma + Next.js = combo parfait pour une API type-safe 💎",
         likes: 33,
         authorId: alice.id,
       },
