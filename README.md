@@ -1,6 +1,6 @@
 # `README.md`
 
-````md
+
 # LinkUp — Application sociale avec Next.js
 
 LinkUp est une application sociale développée avec **Next.js** dans le cadre du projet d’évaluation M2 DEVFLSTK.
@@ -45,7 +45,7 @@ Fonctionnalités ajoutées :
 Cloner le projet :
 
 ```bash
-git clone LIEN_DU_REPO_GITHUB
+git clone https://github.com/tom-caron/nextjs-session1.git
 cd nextjs-session1
 ````
 
@@ -190,7 +190,7 @@ Relance le seed de la base de données.
 Lien Vercel :
 
 ```txt
-COLLER_ICI_LE_LIEN_VERCEL
+https://nextjs-session1.vercel.app/
 ```
 
 Lien GitHub :
@@ -213,13 +213,3 @@ Les données sont persistées avec Prisma et ne sont pas stockées en mémoire.
 Projet réalisé dans le cadre du cours Next.js M2 DEVFLSTK.
 
 ````
-
-Pense juste à remplacer :
-
-```txt
-LIEN_DU_REPO_GITHUB
-COLLER_ICI_LE_LIEN_VERCEL
-COLLER_ICI_LE_LIEN_DU_REPO_GITHUB
-````
-
-par tes vrais liens quand tu les auras.
